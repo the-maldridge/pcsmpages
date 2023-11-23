@@ -1,0 +1,17 @@
+{% extends "bar.p2" %}
+
+{% block title %}Field Bar{% endblock %}
+
+{% block bodystyle %}chroma{% endblock %}
+{% block bar %}
+<div class="flex-container">
+  <div class="flex-item flex-max">
+  {{Phase}} - Match {{Number}}
+  </div>
+  {% for team in Teams %}
+  <div class="flex-item flex-shrink center {{team.Quadrant|lower}}">
+    {{ team.Name }}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

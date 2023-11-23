@@ -1,0 +1,54 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+.bar-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #ddd;
+    font-weight: 700;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.flex-item {
+    padding: 1em;
+}
+
+.flex-max {
+    flex-grow: 1;
+}
+
+.flex-less {
+    flex-shrink: 3;
+}
+
+.center {
+    text-align: center;
+}
+
+.chroma {
+    background: #00ff44;
+}
+
+.red {
+    background: #f4a2a2;
+}
+
+.blue {
+    background: #9fb1d4;
+}
+
+.green {
+    background: #8de98d;
+}
+
+.yellow {
+    background: #f5f551;
+}

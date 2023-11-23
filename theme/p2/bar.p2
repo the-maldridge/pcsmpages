@@ -1,0 +1,12 @@
+{% extends "base.p2" %}
+
+{% block head %}
+<meta http-equiv="refresh" content="10">
+{% endblock %}
+
+{% block content %}
+<div class="bar-container">
+  {% block bar %}
+  {% endblock %}
+</div>
+{% endblock %}
