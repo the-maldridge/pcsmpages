@@ -2,6 +2,7 @@ package pcsm
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/hashicorp/go-hclog"
 )
@@ -17,13 +18,18 @@ type Client struct {
 // Option configures the client.
 type Option func(c *Client)
 
+// A Schedule is a list of matches that occur in a serial order.
+type Schedule []Match
+
 // Match represents a match in any state, possibly across multiple
 // fields.
 type Match struct {
-	Phase  string
-	Number int `json:"matchNumber"`
-	State  string
-	Fields []Field
+	Phase         string
+	Number        int `json:"matchNumber"`
+	State         string
+	Start         time.Time
+	TimeRemaining time.Duration
+	Fields        []Field
 }
 
 // Field has a number and a set of teams.

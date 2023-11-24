@@ -7,6 +7,7 @@ import (
 	"path"
 	"strconv"
 	"time"
+	"errors"
 
 	"github.com/hashicorp/go-hclog"
 )
@@ -55,4 +56,38 @@ func (c *Client) GetMatch(phase string, number int) (*Match, error) {
 	}
 
 	return m, nil
+}
+
+// GetCurrentMatchFromSchedule returns whatever match the schedule
+// thinks is either Staged or Started.
+func (c *Client) GetCurrentMatchFromSchedule() (*Match, error) {
+	s, err := c.GetSchedule("")
+	if err != nil {
+		return nil, err
+	}
+
+	for _, m := range *s {
+		if m.State == "Staged" || m.State == "Started" {
+			return &m, nil
+		}
+	}
+	return nil, errors.New("no match in correct state")
+}
+
+// GetSchedule loads the current schedule from PCSM.
+func (c *Client) GetSchedule(phase string) (*Schedule, error) {
+	p := path.Join(path.Clean(path.Join("api/public/schedule", phase)))
+	url := fmt.Sprintf("http://%s/%s", c.addr, p)
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	s := new(Schedule)
+	if err := json.NewDecoder(resp.Body).Decode(s); err != nil {
+		c.l.Error("Error decoding json", "error", err)
+		return nil, err
+	}
+	return s, nil
 }

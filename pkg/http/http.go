@@ -94,7 +94,7 @@ func (s *Server) doTemplate(w http.ResponseWriter, r *http.Request, tmpl string,
 }
 
 func (s *Server) debug(w http.ResponseWriter, r *http.Request) {
-	m, err := s.p.GetCurrentMatch()
+	m, err := s.p.GetCurrentMatchFromSchedule()
 	if err != nil {
 		s.l.Error("Error getting current match", "error", err)
 	}
@@ -103,7 +103,7 @@ func (s *Server) debug(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) barField(w http.ResponseWriter, r *http.Request) {
-	m, err := s.p.GetCurrentMatch()
+	m, err := s.p.GetCurrentMatchFromSchedule()
 	if err != nil {
 		s.l.Error("Error getting current match", "error", err)
 		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
