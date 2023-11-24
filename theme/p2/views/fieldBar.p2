@@ -9,9 +9,11 @@
   {{Phase}} - Match {{Number}}
   </div>
   {% for team in Teams %}
+  {% if team.Name %}
   <div class="flex-item flex-shrink center {{team.Quadrant|lower}}">
     {{ team.Name }}
   </div>
+  {% endif %}
   {% endfor %}
 </div>
 {% endblock %}
