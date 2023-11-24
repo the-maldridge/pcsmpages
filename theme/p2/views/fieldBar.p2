@@ -4,6 +4,7 @@
 
 {% block bodystyle %}chroma{% endblock %}
 {% block bar %}
+{% if Number %}
 <div class="flex-container">
   <div class="flex-item flex-max">
   {{Phase}} - Match {{Number}}
@@ -16,4 +17,5 @@
   {% endif %}
   {% endfor %}
 </div>
+{% endif %}
 {% endblock %}

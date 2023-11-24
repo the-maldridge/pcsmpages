@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+	"sort"
 	"strconv"
 	"time"
-	"errors"
 
 	"github.com/hashicorp/go-hclog"
 )
@@ -66,16 +66,16 @@ func (c *Client) GetCurrentMatchFromSchedule() (*Match, error) {
 		return nil, err
 	}
 
-	for _, m := range *s {
+	for _, m := range s {
 		if m.State == "Staged" || m.State == "Started" {
 			return &m, nil
 		}
 	}
-	return nil, errors.New("no match in correct state")
+	return new(Match), nil
 }
 
 // GetSchedule loads the current schedule from PCSM.
-func (c *Client) GetSchedule(phase string) (*Schedule, error) {
+func (c *Client) GetSchedule(phase string) (Schedule, error) {
 	p := path.Join(path.Clean(path.Join("api/public/schedule", phase)))
 	url := fmt.Sprintf("http://%s/%s", c.addr, p)
 	resp, err := http.Get(url)
@@ -84,10 +84,15 @@ func (c *Client) GetSchedule(phase string) (*Schedule, error) {
 	}
 	defer resp.Body.Close()
 
-	s := new(Schedule)
-	if err := json.NewDecoder(resp.Body).Decode(s); err != nil {
+	s := Schedule{}
+	if err := json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		c.l.Error("Error decoding json", "error", err)
 		return nil, err
 	}
+
+	sort.Slice(s, func(i, j int) bool {
+		return s[i].Number < s[j].Number
+	})
+
 	return s, nil
 }
