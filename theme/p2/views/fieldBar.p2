@@ -5,7 +5,7 @@
 {% block bodystyle %}chroma{% endblock %}
 {% block bar %}
 {% if Number %}
-<div class="flex-container">
+<div class="flex-container flex-row justify-end">
   <div class="flex-item flex-max">
   {{Phase}} - Match {{Number}}
   </div>

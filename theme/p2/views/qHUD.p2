@@ -1,0 +1,52 @@
+{% extends "base.p2" %}
+
+{% block title %}Queue HUD{% endblock %}
+
+{% block head %}
+<meta http-equiv="refresh" content="10">
+{% endblock %}
+
+{% block content %}
+{% if Running %}
+<div>
+  <div class="flex-container flex-row">
+    <div class="flex-item header center">
+      <h2>Current Match</h2>
+      <h3>{{ Running.Phase }} - {{ Running.Number }}</h3>
+    </div>
+    {% for field in Running.Fields %}
+    <div class="flex-container flex-column" style="width:25%;">
+      <div class="flex-item center bold header">
+        Field {{ field.Number }}
+      </div>
+      {% for team in field.Teams %}
+      <div class="flex-item center {{ team.Quadrant }}">
+        {{ team.Name }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+<div>
+  <div class="flex-container flex-row">
+    <div class="flex-item header center">
+      <h2>Queue to Here</h2>
+      <h3>{{ QueueHere.Phase }} - {{ QueueHere.Number }}</h3>
+    </div>
+    {% for field in QueueHere.Fields %}
+    <div class="flex-container flex-column" style="width:25%;">
+      <div class="flex-item center bold header">
+        Field {{ field.Number }}
+      </div>
+      {% for team in field.Teams %}
+      <div class="flex-item center {{ team.Quadrant }}">
+        {{ team.Name }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

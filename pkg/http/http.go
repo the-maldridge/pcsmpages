@@ -39,6 +39,7 @@ func New(opts ...Option) (*Server, error) {
 
 	s.r.Get("/debug", s.debug)
 	s.r.Get("/bar/field/{fnum}", s.barField)
+	s.r.Get("/q/{offset}", s.qDisplay)
 
 	return &s, nil
 }
@@ -127,4 +128,44 @@ func (s *Server) barField(w http.ResponseWriter, r *http.Request) {
 	}
 	s.l.Debug("Context", "ctx", ctx)
 	s.doTemplate(w, r, "views/fieldBar.p2", ctx)
+}
+
+func (s *Server) qDisplay(w http.ResponseWriter, r *http.Request) {
+	m, err := s.p.GetCurrentMatchFromSchedule()
+	if err != nil {
+		s.l.Error("Error getting current match", "error", err)
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		return
+	}
+
+	offset, err := strconv.Atoi(chi.URLParam(r, "offset"))
+	if err != nil {
+		s.l.Error("Bad offset number!", "offset", chi.URLParam(r, "offset"))
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		return
+	}
+
+	sch, err := s.p.GetSchedule(m.Phase)
+	if err != nil {
+		s.l.Error("Error getting current schedule", "error", err)
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		return
+	}
+
+	ctx := pongo2.Context{"Phase": m.Phase, "Running": m}
+
+	if m.Number+offset < len(sch)+1 {
+		for _, sm := range sch {
+			if sm.Number == m.Number+offset {
+				ctx["QueueHere"] = sm
+				break
+			}
+		}
+	}
+	if r.URL.Query().Get("hidecurrent") != "" {
+		delete(ctx, "Running")
+	}
+
+	s.l.Debug("Context", "ctx", ctx)
+	s.doTemplate(w, r, "views/qHUD.p2", ctx)
 }
