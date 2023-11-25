@@ -95,7 +95,7 @@ func (s *Server) doTemplate(w http.ResponseWriter, r *http.Request, tmpl string,
 }
 
 func (s *Server) debug(w http.ResponseWriter, r *http.Request) {
-	m, err := s.p.GetCurrentMatchFromSchedule()
+	m, err := s.p.GetCurrentMatch()
 	if err != nil {
 		s.l.Error("Error getting current match", "error", err)
 	}
@@ -104,17 +104,17 @@ func (s *Server) debug(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) barField(w http.ResponseWriter, r *http.Request) {
-	m, err := s.p.GetCurrentMatchFromSchedule()
+	m, err := s.p.GetCurrentMatch()
 	if err != nil {
 		s.l.Error("Error getting current match", "error", err)
-		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		s.doTemplate(w, r, "views/fieldBar.p2", pongo2.Context{})
 		return
 	}
 
 	fnum, err := strconv.Atoi(chi.URLParam(r, "fnum"))
 	if err != nil {
 		s.l.Error("Bad field number!", "fnum", chi.URLParam(r, "fnum"))
-		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		s.doTemplate(w, r, "views/fieldBar.p2", pongo2.Context{})
 		return
 	}
 
@@ -131,7 +131,7 @@ func (s *Server) barField(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) qDisplay(w http.ResponseWriter, r *http.Request) {
-	m, err := s.p.GetCurrentMatchFromSchedule()
+	m, err := s.p.GetCurrentMatch()
 	if err != nil {
 		s.l.Error("Error getting current match", "error", err)
 		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
