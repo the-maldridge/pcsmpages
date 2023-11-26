@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/flosch/pongo2/v4"
 	"github.com/go-chi/chi/v5"
@@ -40,6 +41,8 @@ func New(opts ...Option) (*Server, error) {
 	s.r.Get("/debug", s.debug)
 	s.r.Get("/bar/field/{fnum}", s.barField)
 	s.r.Get("/q/{offset}", s.qDisplay)
+	s.r.Get("/clock", s.clock)
+	s.r.Get("/clock/end", s.clockEnd)
 
 	return &s, nil
 }
@@ -168,4 +171,23 @@ func (s *Server) qDisplay(w http.ResponseWriter, r *http.Request) {
 
 	s.l.Debug("Context", "ctx", ctx)
 	s.doTemplate(w, r, "views/qHUD.p2", ctx)
+}
+
+func (s *Server) clock(w http.ResponseWriter, r *http.Request) {
+	s.doTemplate(w, r, "views/clock.p2", pongo2.Context{})
+}
+
+func (s *Server) clockEnd(w http.ResponseWriter, r *http.Request) {
+	m, err := s.p.GetCurrentMatch()
+	if err != nil {
+		s.l.Error("Error getting current match", "error", err)
+	}
+
+	d := struct {
+		MatchEnd time.Time
+	}{
+		MatchEnd: m.End.ToTime(),
+	}
+
+	json.NewEncoder(w).Encode(d)
 }

@@ -58,6 +58,17 @@ h3 {
     text-align: center;
 }
 
+.grid-center {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.clock {
+    font-size: 75vh;
+}
+
 .chroma {
     background: #00ff44;
 }

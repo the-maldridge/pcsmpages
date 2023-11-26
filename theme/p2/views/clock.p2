@@ -1,0 +1,52 @@
+{% extends "base.p2" %}
+
+{% block title %}Match Clock{% endblock %}
+
+{% block content %}
+<div class="grid-center">
+  <div>
+    <span id="clock" class="clock">3:00</span>
+  </div>
+</div>
+
+<script>
+ var later = new Date().getTime();
+ var paintClock = function() {
+     var now = new Date().getTime();
+     var diff = later - now;
+
+     var minutes = Math.floor(diff % (1000 * 60 * 60)/(1000 * 60));
+     var seconds = Math.floor(diff % (1000 * 60)/1000);
+     var tenths  = Math.floor((diff % 1000)/100);
+
+     if (minutes>=1) {
+         document.getElementById("clock").innerHTML = minutes +":"+(seconds+"").padStart(2, "0");
+         setTimeout(paintClock, 100);
+     } else if (seconds>=0) {
+         document.getElementById("clock").innerHTML = seconds + "." + tenths;
+         setTimeout(paintClock, 100);
+     } else {
+         document.getElementById("clock").innerHTML = "0:00";
+         setTimeout(function() {
+             document.getElementById("clock").innerHTML = "3:00";
+             getClockEnd();
+         }, 10000);
+     }
+ }
+
+ var getClockEnd = function() {
+     fetch("clock/end")
+         .then(response => response.json())
+         .then(d => {
+             later = new Date(d.MatchEnd).getTime();
+             now = new Date().getTime();
+             if (later < now) {
+                 setTimeout(getClockEnd, 1000);
+             } else {
+                 paintClock();
+             }
+         });
+ }
+ getClockEnd();
+</script>
+{% endblock %}

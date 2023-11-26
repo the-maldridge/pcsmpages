@@ -21,13 +21,20 @@ type Option func(c *Client)
 // A Schedule is a list of matches that occur in a serial order.
 type Schedule []Match
 
+// Time wraps the normal Time to make deserialization work
+// correctly for the C# timestamp.
+type Time struct {
+	time.Time
+}
+
 // Match represents a match in any state, possibly across multiple
 // fields.
 type Match struct {
 	Phase         string
 	Number        int `json:"matchNumber"`
 	State         string
-	Start         time.Time
+	Start         Time `json:"matchStart"`
+	End           Time `json:"matchEnd"`
 	TimeRemaining time.Duration
 	Fields        []Field
 }
