@@ -20,7 +20,7 @@
         Field {{ field.Number }}
       </div>
       {% for team in field.Teams %}
-      <div class="flex-item center {{ team.Quadrant }}">
+      <div class="flex-item center {{ team.Quadrant|lower }}">
         {{ team.Name }}
       </div>
       {% endfor %}
@@ -41,7 +41,7 @@
         Field {{ field.Number }}
       </div>
       {% for team in field.Teams %}
-      <div class="flex-item center {{ team.Quadrant }}">
+      <div class="flex-item center {{ team.Quadrant|lower }}">
         {{ team.Name }}
       </div>
       {% endfor %}
