@@ -158,7 +158,11 @@ func (s *Server) qDisplay(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx := pongo2.Context{"Phase": m.Phase, "Running": m}
+	ctx := pongo2.Context{
+		"Phase": m.Phase,
+		"Running": m,
+		"Refresh": r.URL.Query().Get("dwell"),
+	}
 
 	if m.Number+offset < len(sch)+1 {
 		for _, sm := range sch {

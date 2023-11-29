@@ -2,9 +2,11 @@
 
 {% block title %}Queue HUD{% endblock %}
 
+{% if Refresh %}
 {% block head %}
-<meta http-equiv="refresh" content="10">
+<meta http-equiv="refresh" content="{{ Refresh }}; url={{ Next }}">
 {% endblock %}
+{% endif %}
 
 {% block content %}
 {% if Running %}
