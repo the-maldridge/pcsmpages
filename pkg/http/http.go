@@ -44,6 +44,9 @@ func New(opts ...Option) (*Server, error) {
 	s.r.Get("/clock", s.clock)
 	s.r.Get("/clock/end", s.clockEnd)
 
+	s.r.Get("/scoreboard", s.scoreboardAll)
+	s.r.Get("/scoreboard/page/{page}/{count}", s.scoreboardPage)
+
 	return &s, nil
 }
 
@@ -98,7 +101,7 @@ func (s *Server) doTemplate(w http.ResponseWriter, r *http.Request, tmpl string,
 }
 
 func (s *Server) debug(w http.ResponseWriter, r *http.Request) {
-	m, err := s.p.GetCurrentMatch()
+	m, err := s.p.GetScoreboard()
 	if err != nil {
 		s.l.Error("Error getting current match", "error", err)
 	}

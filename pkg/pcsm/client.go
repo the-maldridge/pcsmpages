@@ -96,3 +96,32 @@ func (c *Client) GetSchedule(phase string) (Schedule, error) {
 
 	return s, nil
 }
+
+// GetScoreboard returns the scoreboard data for all teams in the
+// current phase.
+func (c *Client) GetScoreboard() (Scoreboard, error) {
+	p := "api/public/marquee"
+	url := fmt.Sprintf("http://%s/%s", c.addr, p)
+	resp, err := http.Get(url)
+	if err != nil {
+		return Scoreboard{}, err
+	}
+	defer resp.Body.Close()
+
+	sb := &Scoreboard{}
+	if err := json.NewDecoder(resp.Body).Decode(sb); err != nil {
+		c.l.Error("Error decoding json", "error", err)
+		return Scoreboard{}, err
+	}
+
+	sort.Slice(sb.Teams, func(i, j int) bool {
+		return sb.Teams[i].Rank < sb.Teams[j].Rank
+	})
+	sb.FillDivisions()
+
+	for i, t := range sb.Teams {
+		t.Page = int(i / 5)
+	}
+
+	return *sb, nil
+}

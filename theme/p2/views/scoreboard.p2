@@ -1,0 +1,41 @@
+{% extends "base.p2" %}
+
+{% block title %}Scoreboard{% endblock %}
+{% block bodystyle %}{% endblock %}
+
+{% if Refresh %}
+{% block head %}
+<meta http-equiv="refresh" content="{{ Refresh }}; url={{ Next }}">
+{% endblock %}
+{% endif %}
+
+{% block content %}
+<div class="center-container">
+    <table class="scoretable">
+        <tr>
+            <th class="center">Rank</th>
+            <th class="center">Score</th>
+            <th style="min-width:50%;">Team</th>
+            {% if ShowDivision %}
+            <th>Division</th>
+            {% endif %}
+            <th class="center">Completed</th>
+            <th class="center">Next</th>
+        </tr>
+        {% for team in Board.Teams %}
+        {% if team.Name %}
+        <tr>
+            <td class="center">{{ team.Rank }}</td>
+            <td class="center">{{ team.Score }}</td>
+            <td>{{ team.Name }}</td>
+            {% if ShowDivision %}
+            <td>{{ team.Division }}</td>
+            {% endif %}
+            <td class="center">{{ team.Completed }}</td>
+            <td class="center">{{ team.NextMatch }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

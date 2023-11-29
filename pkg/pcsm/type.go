@@ -54,3 +54,29 @@ type Team struct {
 	Number      int `json:"teamNumber"`
 	Ticker      string
 }
+
+// A Scoreboard represents the data necessary to draw a numerically
+// sorted set of teams based on the number of points gained.
+type Scoreboard struct {
+	Teams     []*RankedTeam
+	Divisions []*Division
+}
+
+// A RankedTeam represent teams that have scoreboard information.
+type RankedTeam struct {
+	Rank       int
+	Page       int
+	Name       string
+	Number     int `json:"teamNumber"`
+	Score      int
+	NextMatch  string `json:"nextPhase"`
+	Completed  int    `json:"matchesCompleted"`
+	Division   string
+	DivisionID string `json:"divisionId"`
+}
+
+// Division maps between division display names and IDs.
+type Division struct {
+	ID   string
+	Name string
+}
