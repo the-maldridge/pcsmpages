@@ -44,8 +44,9 @@ func (s *Server) scoreboardPage(w http.ResponseWriter, r *http.Request) {
 	start := (page * count)
 	end := start + count
 	nextpage := page + 1
-	if end > len(sb.Teams) {
+	if end >= len(sb.Teams) {
 		nextpage = 0
+		end = len(sb.Teams)-1
 	}
 	sb.Teams = sb.Teams[start:end]
 
