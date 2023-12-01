@@ -40,6 +40,7 @@ func New(opts ...Option) (*Server, error) {
 
 	s.r.Get("/debug", s.debug)
 	s.r.Get("/bar/field/{fnum}", s.barField)
+	s.r.Get("/box/match", s.boxMatch)
 	s.r.Get("/q/{offset}", s.qDisplay)
 	s.r.Get("/clock", s.clock)
 	s.r.Get("/clock/end", s.clockEnd)
@@ -134,6 +135,17 @@ func (s *Server) barField(w http.ResponseWriter, r *http.Request) {
 	}
 	s.l.Debug("Context", "ctx", ctx)
 	s.doTemplate(w, r, "views/fieldBar.p2", ctx)
+}
+
+func (s *Server) boxMatch(w http.ResponseWriter, r *http.Request) {
+	m, err := s.p.GetCurrentMatch()
+	if err != nil {
+		s.l.Error("Error getting current match", "error", err)
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		return
+	}
+
+	s.doTemplate(w, r, "views/boxMatch.p2", pongo2.Context{"Match": m})
 }
 
 func (s *Server) qDisplay(w http.ResponseWriter, r *http.Request) {

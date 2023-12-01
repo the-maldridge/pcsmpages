@@ -74,6 +74,10 @@ h3 {
     font-size: 75vh;
 }
 
+.phase {
+    font-size: 10vh;
+}
+
 .scoretable {
     margin-left: 4vw;
     margin-right: 4vw;

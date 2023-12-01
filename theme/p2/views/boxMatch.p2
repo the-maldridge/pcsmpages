@@ -1,0 +1,16 @@
+{% extends "base.p2" %}
+
+{% block title %}Match ID{% endblock %}
+
+{% block head %}
+<meta http-equiv="refresh" content="5">
+{% endblock %}
+
+{% block content %}
+<div class="grid-center">
+    <div class="center">
+        <span class="clock">{{ Match.Number }}</span><br />
+        <span class="phase">{{ Match.Phase }}</span>
+    </div>
+</div>
+{% endblock %}
