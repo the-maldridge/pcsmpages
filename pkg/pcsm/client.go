@@ -55,6 +55,14 @@ func (c *Client) GetMatch(phase string, number int) (*Match, error) {
 		return nil, err
 	}
 
+	for i := range m.Fields {
+		if m.Fields[i].Number == 0 {
+			m.Fields[i].Number = i + 1
+		}
+	}
+
+	c.l.Debug("retrieved match", "match", m)
+
 	return m, nil
 }
 
@@ -93,6 +101,14 @@ func (c *Client) GetSchedule(phase string) (Schedule, error) {
 	sort.Slice(s, func(i, j int) bool {
 		return s[i].Number < s[j].Number
 	})
+
+	for i := range s {
+		for j := range s[i].Fields {
+			if s[i].Fields[j].Number == 0 {
+				s[i].Fields[j].Number = j + 1
+			}
+		}
+	}
 
 	return s, nil
 }
